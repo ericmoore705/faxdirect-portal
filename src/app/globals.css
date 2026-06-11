@@ -1,0 +1,49 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+body {
+  font-family: 'Inter', system-ui, sans-serif;
+  @apply bg-surface-50 text-surface-800;
+}
+
+@layer components {
+  .btn-primary {
+    @apply inline-flex items-center gap-2 px-4 py-2.5 bg-brand-500 text-white font-medium
+           rounded-lg hover:bg-brand-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+
+  .btn-secondary {
+    @apply inline-flex items-center gap-2 px-4 py-2.5 bg-surface-0 text-surface-700 font-medium
+           rounded-lg border border-surface-200 hover:bg-surface-50 transition-colors;
+  }
+
+  .btn-danger {
+    @apply inline-flex items-center gap-2 px-4 py-2.5 bg-red-600 text-white font-medium
+           rounded-lg hover:bg-red-700 transition-colors;
+  }
+
+  .card {
+    @apply bg-surface-0 rounded-xl border border-surface-200 shadow-sm;
+  }
+
+  .input {
+    @apply w-full px-3 py-2.5 bg-surface-0 border border-surface-200 rounded-lg
+           text-surface-800 placeholder:text-surface-400
+           focus:outline-none focus:ring-2 focus:ring-brand-500/30 focus:border-brand-500
+           transition-colors;
+  }
+
+  .badge {
+    @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium;
+  }
+
+  .badge-delivered { @apply bg-green-50 text-green-700 ring-1 ring-green-200; }
+  .badge-sending   { @apply bg-blue-50 text-blue-700 ring-1 ring-blue-200; }
+  .badge-queued    { @apply bg-purple-50 text-purple-700 ring-1 ring-purple-200; }
+  .badge-failed    { @apply bg-red-50 text-red-700 ring-1 ring-red-200; }
+  .badge-received  { @apply bg-cyan-50 text-cyan-700 ring-1 ring-cyan-200; }
+  .badge-retrying  { @apply bg-amber-50 text-amber-700 ring-1 ring-amber-200; }
+}

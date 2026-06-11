@@ -1,0 +1,91 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String?
+  image     String?
+  role      Role     @default(USER)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  sentFaxes     SentFax[]
+  receivedFaxes ReceivedFax[]
+  savedNumbers  SavedFaxNumber[]
+}
+
+model SentFax {
+  id           String    @id @default(cuid())
+  toNumber     String
+  fromNumber   String    @default("+18882789949")
+  faxSid       String?   @unique
+  status       String    @default("queued")
+  fileName     String?
+  fileUrl      String?
+  coverSheetUrl String?
+  sentAt       DateTime  @default(now())
+  completedAt  DateTime?
+  duration     Int?
+  numPages     Int?
+  errorMessage String?
+  retryCount   Int       @default(0)
+  lastRetryAt  DateTime?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  sentById String
+  sentBy   User   @relation(fields: [sentById], references: [id])
+
+  @@index([status])
+  @@index([sentAt])
+  @@index([sentById])
+}
+
+model ReceivedFax {
+  id         String   @id @default(cuid())
+  fromNumber String
+  toNumber   String   @default("+18882789949")
+  faxSid     String?  @unique
+  status     String   @default("received")
+  numPages   Int?
+  mediaUrl   String?
+  localUrl   String?
+  receivedAt DateTime @default(now())
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  // Optional: assign to a user who "claimed" it
+  assignedToId String?
+  assignedTo   User?   @relation(fields: [assignedToId], references: [id])
+
+  @@index([receivedAt])
+  @@index([fromNumber])
+}
+
+model SavedFaxNumber {
+  id          String   @id @default(cuid())
+  name        String
+  phoneNumber String
+  useCount    Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  createdById String
+  createdBy   User   @relation(fields: [createdById], references: [id])
+
+  @@unique([phoneNumber, createdById])
+  @@index([useCount(sort: Desc)])
+}
+
+enum Role {
+  ADMIN
+  USER
+}
