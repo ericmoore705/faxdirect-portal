@@ -51,7 +51,7 @@ export async function POST(req: NextRequest) {
       const merged = await mergePdfs(coverSheet, pdfBuffers);
 
       // Upload merged PDF to Vercel Blob
-      const blob = await put(`faxes/merged_${Date.now()}.pdf`, merged, {
+      const blob = await put(`faxes/merged_${Date.now()}.pdf`, Buffer.from(merged), {
         access: "public",
         contentType: "application/pdf",
       });
